@@ -1,32 +1,42 @@
 <template>
   <div id="app">
+    <Navbar />
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
     </div>
-    <router-view/>
+    <router-view @authenticated="setAuthenticated" />
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Navbar from "./components/Navbar.vue";
+export default {
+  name: "App",
+  components: {
+    Navbar
+  },
+  data() {
+    return {
+      authenticated: false,
+      mockAccount: {
+        username: "solola",
+        password: "password"
+      }
+    };
+  },
+  mounted() {
+    if (!this.authenticated) {
+      this.$router.replace({ name: "login" });
+    }
+  },
+  methods: {
+    setAuthenticated(status) {
+      this.authenticated = status;
+    },
+    logout() {
+      this.authenticated = false;
+    }
+  }
+};
+</script>
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
